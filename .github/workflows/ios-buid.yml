@@ -15,15 +15,11 @@ jobs:
 
     - name: Install Node.js
       uses: actions/setup-node@v2
+      with:
+        node-version: '20'
 
     - name: Install Ionic CLI
       run: npm install -g @ionic/cli
-
-    - name: Install Node
-      uses: actions/setup-node@v3
-      with:
-          node-version: 20
-          cache: npm
 
     - name: Install dependencies
       run: npm ci
@@ -34,17 +30,24 @@ jobs:
     - name: Add iOS platform
       run: ionic cap add ios
 
+    - name: Sync Capacitor Configuration
+      run: ionic cap sync ios
+
     - name: Install CocoaPods
       run: sudo gem install cocoapods
 
     - name: Install iOS dependencies
       run: cd ios/App && pod install
 
+    - name: List iOS Project Directory
+      run: ls -al ios/
+
     - name: Build iOS App
       run: |
         cd ios
         xcodebuild -workspace App.xcworkspace -scheme App -sdk iphoneos -configuration AppStoreDistribution archive -archivePath $PWD/build/App.xcarchive
 
+    # Update this path according to where your .ipa file is generated
     - name: Upload IPA
       uses: actions/upload-artifact@v2
       with:
