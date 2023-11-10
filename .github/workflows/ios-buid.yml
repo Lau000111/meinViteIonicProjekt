@@ -38,19 +38,12 @@ jobs:
     - name: Sync Capacitor Configuration
       run: ionic cap sync ios
 
-    - name: Install CocoaPods
-      run: sudo gem install cocoapods
-
     - name: Install iOS dependencies
       run: cd ios/App && pod install
 
-    - name: List iOS Project Directory
-      run: ls -al ios/
 
     - name: Build iOS App
-      run: |
-        cd ios
-        run: xcodebuild -workspace './ios/App/App.xcworkspace' -scheme App -destination generic/platform=iOS -archivePath App.xcarchive archive
+      run: xcodebuild -workspace './ios/App/App.xcworkspace' -scheme App -destination generic/platform=iOS -archivePath App.xcarchive archive
 
     - name: Upload release bundle
       uses: actions/upload-artifact@v3
