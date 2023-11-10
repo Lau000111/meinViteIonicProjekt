@@ -43,7 +43,7 @@ jobs:
 
 
     - name: Build iOS App
-      run: xcodebuild -workspace './ios/App/App.xcworkspace' -scheme App -destination generic/platform=iOS -archivePath App.xcarchive archive
+      run: xcodebuild -workspace './ios/App/App.xcworkspace' -scheme App -sdk iphoneos build
 
     - name: Upload release bundle
       uses: actions/upload-artifact@v3
