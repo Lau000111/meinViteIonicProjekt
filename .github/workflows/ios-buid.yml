@@ -1,0 +1,46 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install Node.js
+      uses: actions/setup-node@v2
+
+    - name: Install Ionic CLI
+      run: npm install -g @ionic/cli
+
+    - name: Install Node.js dependencies
+      run: npm install
+
+    - name: Build Ionic Project
+      run: ionic build
+
+    - name: Add iOS platform
+      run: ionic cap add ios
+
+    - name: Install CocoaPods
+      run: sudo gem install cocoapods
+
+    - name: Install iOS dependencies
+      run: cd ios/App && pod install
+
+    - name: Build iOS App
+      run: |
+        cd ios
+        xcodebuild -workspace App.xcworkspace -scheme App -sdk iphoneos -configuration AppStoreDistribution archive -archivePath $PWD/build/App.xcarchive
+
+    - name: Upload IPA
+      uses: actions/upload-artifact@v2
+      with:
+        name: app.ipa
+        path: path/to/your/app.ipa
